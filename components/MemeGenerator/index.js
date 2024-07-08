@@ -49,7 +49,7 @@ class MemeGenerator extends Component {
     topText: '',
     bottomText: '',
     fontSize: fontSizesOptionsList[0].optionId,
-    meme: null,
+    shouldShowMeme: false,
   }
 
   onChangeImageInput = event => {
@@ -64,83 +64,69 @@ class MemeGenerator extends Component {
     this.setState({bottomText: event.target.value})
   }
 
+  handleGenerate = event => {
+    event.preventDefault()
+    this.setState({shouldShowMeme: true})
+  }
+
   onChangeFontSizeInput = event => {
     this.setState({fontSize: event.target.value})
   }
 
-  handleGenerate = event => {
-    event.preventDefault()
-    const {imageUrl, topText, bottomText, fontSize} = this.state
-    this.setState({
-      meme: {
-        imageUrl,
-        topText,
-        bottomText,
-        fontSize,
-      },
-    })
-  }
-
   render() {
-    const {imageUrl, topText, bottomText, fontSize, meme} = this.state
+    const {imageUrl, topText, bottomText, fontSize, shouldShowMeme} = this.state
 
     return (
-      <BgContainer data-testid="meme">
-        <Form onSubmit={this.handleGenerate}>
-          <Heading>Meme Generator</Heading>
-          <Label>
-            Image URL
-            <Input
-              type="text"
-              name="imageUrl"
-              value={imageUrl}
-              onChange={this.onChangeImageInput}
-              placeholder="Enter the Image URL"
-            />
-          </Label>
-          <Label>
-            Top Text
-            <Input
-              type="text"
-              name="topText"
-              value={topText}
-              onChange={this.onChangeTopTextInput}
-              placeholder="Enter the Top Text"
-            />
-          </Label>
-          <Label>
-            Bottom Text
-            <Input
-              type="text"
-              name="bottomText"
-              value={bottomText}
-              onChange={this.onChangeBottomInput}
-              placeholder="Enter the Bottom Text"
-            />
-          </Label>
-          <Label>
-            Font Size
-            <Select
-              name="fontSize"
-              value={fontSize}
-              onChange={this.onChangeFontSizeInput}
-            >
-              {fontSizesOptionsList.map(option => (
-                <Option key={option.optionId} value={option.optionId}>
-                  {option.displayText}
-                </Option>
-              ))}
-            </Select>
-          </Label>
-          <GenerateButton type="submit">Generate</GenerateButton>
+      <BgContainer>
+        <Heading>Meme Generator</Heading>
+        <Form>
+          <Label htmlFor="background-url">Image URL</Label>
+          <Input
+            id="background-url"
+            type="text"
+            value={imageUrl}
+            onChange={this.onChangeImageInput}
+            placeholder="Enter the Image URL"
+          />
+          <Label htmlFor="top-text">Top Text</Label>
+          <Input
+            id="top-text"
+            type="text"
+            value={topText}
+            onChange={this.onChangeTopTextInput}
+            placeholder="Enter the Top Text"
+          />
+          <Label htmlFor="bottom-text"> Bottom Text</Label>
+          <Input
+            id="bottom-text"
+            type="text"
+            value={bottomText}
+            onChange={this.onChangeBottomInput}
+            placeholder="Enter the Bottom Text"
+          />
+          <Label htmlFor="select-element">Font Size</Label>
+          <Select
+            id="select-element"
+            value={fontSize}
+            onChange={this.onChangeFontSizeInput}
+          >
+            {fontSizesOptionsList.map(option => (
+              <Option key={option.optionId} value={option.optionId}>
+                {option.displayText}
+              </Option>
+            ))}
+          </Select>
+          <GenerateButton type="button" onClick={this.handleGenerate}>
+            Generate
+          </GenerateButton>
         </Form>
-        {meme && (
-          <MemeContainer data-testid="meme" backgroundImage={meme.imageUrl}>
-            <MemeText fontSize={meme.fontSize} position="top">
-              {meme.topText}
+        {shouldShowMeme && (
+          <MemeContainer data-testid="meme" backgroundImage={imageUrl}>
+            <MemeText fontSize={fontSize} position="top">
+              {topText}
             </MemeText>
-            <MemeText fontSize={meme.fontSize} position="bottom">
-              {meme.bottomText}
+            <MemeText fontSize={fontSize} position="bottom">
+              {bottomText}
             </MemeText>
           </MemeContainer>
         )}
